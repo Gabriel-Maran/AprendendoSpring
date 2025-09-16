@@ -1,20 +1,25 @@
-package com.gabrielmaran.Cadastro.models;
+package com.gabrielmaran.Cadastro.Pessoas.Model;
 
+import com.gabrielmaran.Cadastro.Tasks.Model.TaskModel;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity //Diz que é uma entidade do db
-@Table(name = "tb_cadastro") //Informa a tabela especifica do db
+@Table(name = "tb_pessoa") //Informa a tabela especifica do db
+@Data
+@NoArgsConstructor
 public class PessoaModel {
+
     @Id//Fala que a proxima variavel é o ID
     @GeneratedValue(strategy = GenerationType.IDENTITY)//Estilo de geração do ID
     private Long id;
     private String nome;
     private String email;
     private int idade;
-
-    public PessoaModel() {
-
-    }
+    @ManyToOne //Uma pessoa pode ter apenas uma task, uma task pode ter +1 pessoa(s)
+    @JoinColumn(name = "task_id") //Foreign key
+    private TaskModel task;
 
     public PessoaModel(String nome, String email, int idade) {
         this.nome = nome;
@@ -22,27 +27,10 @@ public class PessoaModel {
         this.idade = idade;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
+    public PessoaModel(String nome, String email, int idade, TaskModel task) {
         this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
-    }
-
-    public int getIdade() {
-        return idade;
-    }
-
-    public void setIdade(int idade) {
         this.idade = idade;
+        this.task = task;
     }
 }
