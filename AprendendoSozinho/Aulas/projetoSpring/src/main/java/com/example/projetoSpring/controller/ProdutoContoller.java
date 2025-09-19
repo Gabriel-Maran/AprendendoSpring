@@ -1,8 +1,10 @@
 package com.example.projetoSpring.controller;
 
 
+import com.example.projetoSpring.exception.RecursoNaoEncontradoException;
 import com.example.projetoSpring.model.Produto;
 import com.example.projetoSpring.service.ProdutoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +27,9 @@ public class ProdutoContoller {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> getProdutoById(@PathVariable(value = "id") Long id){
-        return produtoService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> getProdutoById(@PathVariable(value = "id") Long id){
+            Produto produto = produtoService.buscarPorId(id);
+            return ResponseEntity.ok(produto);
     }
 
     @PostMapping
