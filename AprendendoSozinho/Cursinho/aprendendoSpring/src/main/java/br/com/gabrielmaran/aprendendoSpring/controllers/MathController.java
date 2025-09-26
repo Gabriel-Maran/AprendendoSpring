@@ -16,7 +16,7 @@ public class MathController {
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
     ) {
-        validOperation(numberOne, numberTwo);
+        validTwoNumsOperation(numberOne, numberTwo);
         return parseDouble(numberOne) + parseDouble(numberTwo);
     }
 
@@ -26,7 +26,7 @@ public class MathController {
             @PathVariable("numOne") String numOne,
             @PathVariable("numTwo") String numTwo
     ) {
-        validOperation(numOne, numTwo);
+        validTwoNumsOperation(numOne, numTwo);
         return parseDouble(numOne) - parseDouble(numTwo);
     }
 
@@ -36,7 +36,7 @@ public class MathController {
             @PathVariable("numOne") String numOne,
             @PathVariable("numTwo") String numTwo
     ) {
-        validOperation(numOne, numTwo);
+        validTwoNumsOperation(numOne, numTwo);
         return parseDouble(numOne) * parseDouble(numTwo);
     }
 
@@ -46,7 +46,7 @@ public class MathController {
             @PathVariable("numOne") String numOne,
             @PathVariable("numTwo") String numTwo
     ) {
-        validOperation(numOne, numTwo);
+        validTwoNumsOperation(numOne, numTwo);
         if (parseDouble(numTwo) == 0D) {
             throw new UnsupportedMethodOperationException("Please, dont try to divide by zero");
         }
@@ -59,7 +59,7 @@ public class MathController {
             @PathVariable("numOne") String numOne,
             @PathVariable("numTwo") String numTwo
     ){
-        validOperation(numOne, numTwo);
+        validTwoNumsOperation(numOne, numTwo);
         return (parseDouble(numOne) + parseDouble(numTwo)) / 2;
     }
 
@@ -69,15 +69,19 @@ public class MathController {
     public Double squareRoot(
             @PathVariable("num") String num
     ){
-        if (!isNumeric(num)) {
-            throw new UnsupportedMethodOperationException("Please, set only numeric values");
-        }
+        validOneNumOperation(num);
         return Math.sqrt(parseDouble(num));
     }
 
     //Auxiliar methods
-    private void validOperation(String strNumOne, String strNumTwo) {
+    private void validTwoNumsOperation(String strNumOne, String strNumTwo) {
         if (!isNumeric(strNumOne) || !isNumeric(strNumTwo)) {
+            throw new UnsupportedMethodOperationException("Please, set only numeric values");
+        }
+    }
+
+    private void validOneNumOperation(String strNum) {
+        if (!isNumeric(strNum)) {
             throw new UnsupportedMethodOperationException("Please, set only numeric values");
         }
     }
@@ -87,6 +91,7 @@ public class MathController {
         String number = strNum.replace(",", ".");
         return number.matches("\\d+|\\d+.\\d+");
     }
+
 
     private Double parseDouble(String strNum) {
         String number = strNum.replace(",", ".");

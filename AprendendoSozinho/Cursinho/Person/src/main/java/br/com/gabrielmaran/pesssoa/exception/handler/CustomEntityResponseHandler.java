@@ -1,7 +1,7 @@
-package br.com.gabrielmaran.aprendendoSpring.exception.handler;
+package br.com.gabrielmaran.pesssoa.exception.handler;
 
-import br.com.gabrielmaran.aprendendoSpring.exception.ExceptionResponse;
-import br.com.gabrielmaran.aprendendoSpring.exception.UnsupportedMethodOperationException;
+import br.com.gabrielmaran.pesssoa.exception.ExceptionResponse;
+import br.com.gabrielmaran.pesssoa.exception.UnsupportedMethodOperationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

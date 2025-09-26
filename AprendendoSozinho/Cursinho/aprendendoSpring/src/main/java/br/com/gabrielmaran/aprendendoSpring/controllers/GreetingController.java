@@ -1,6 +1,6 @@
 package br.com.gabrielmaran.aprendendoSpring.controllers;
 
-import br.com.gabrielmaran.aprendendoSpring.Model.Greeting;
+import br.com.gabrielmaran.aprendendoSpring.model.Greeting;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
