@@ -3,7 +3,7 @@ spring:
     name: aprendendoSpring
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/aprendendoSpring_AtividadePessoa?useTimezone=true&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/aprendendospring_atividadepessoa?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC
     username: root
     password: root
   jpa:
