@@ -27,5 +27,4 @@ class PessoaController(
         return pessoaRepository.findAll()
     }
 
-    @DeleteMapping("{id}")
 }
