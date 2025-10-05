@@ -11,5 +11,6 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        #dialect: org.hibernate.dialect.MySQLDialect #caso for sobre escrever, use, mas se for manter assim, deixe sem
     show-sql: false
+    open-in-view: false
