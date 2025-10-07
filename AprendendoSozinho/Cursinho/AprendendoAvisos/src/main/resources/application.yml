@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: aprendendoSpring
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/aprendendospring_atividadepessoa?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+      #dialect: org.hibernate.dialect.MySQLDialect #caso for sobre escrever, use, mas se for manter assim, deixe sem
+    show-sql: false
+    open-in-view: false
+logging:
+  level:
+
+    br.com.gabrielmaran.AprendendoAvisos: debug
+    #root: warn #Root info por padrão, root se refere ao global
+#Niveis:
+  #Você pode especificar qual tipo de log quer.
+  #Alguns logs, por logica, possibilitam o print de outros log(como INFO no DEBUG)
+  #Logs:
+    #TRACE -> Engloba TRACE, DEBUG, INFO, WARN e ERROR
+      #TRACE engloba tudo que está acontecendo na aplicação
+    #DEBUG -> Engloba DEBUG, INFO, WARN e ERROR
+    #INFO -> Engloba INFO, WARN e ERROR
+    #WARN -> Engloba WARN e ERROR
+    #ERROR -> Engloba ERROR
