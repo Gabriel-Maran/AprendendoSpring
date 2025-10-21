@@ -1,6 +1,6 @@
 package br.com.gabrielmaran.pessoa.controllers;
 
-import br.com.gabrielmaran.pessoa.model.Person;
+import br.com.gabrielmaran.pessoa.data.dto.PersonDTO;
 import br.com.gabrielmaran.pessoa.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,13 +22,13 @@ public class PersonController {
     //        method = RequestMethod.GET,
     //        produces = MediaType.APPLICATION_JSON_VALUE)
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Person> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<PersonDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(personService.findById(id));
     }
 
     // @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Person>> findAll() {
+    public ResponseEntity<List<PersonDTO>> findAll() {
         return ResponseEntity.ok(personService.findAll());
     }
 
@@ -41,7 +41,7 @@ public class PersonController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Person> createPerson(@RequestBody Person pessoa) {
+    public ResponseEntity<PersonDTO> createPerson(@RequestBody PersonDTO pessoa) {
         return ResponseEntity.ok(personService.createPerson(pessoa));
     }
 
@@ -54,7 +54,7 @@ public class PersonController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Person> updatePerson(@RequestBody Person person) {
+    public ResponseEntity<PersonDTO> updatePerson(@RequestBody PersonDTO person) {
         return ResponseEntity.ok(personService.updatePerson(person));
     }
 
