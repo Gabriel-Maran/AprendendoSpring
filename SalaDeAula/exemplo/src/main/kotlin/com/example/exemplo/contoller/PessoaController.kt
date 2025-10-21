@@ -57,7 +57,7 @@ class PessoaController(
         return ResponseEntity.ok(pessoaRepository.save<Pessoa>(pessoaAtualizando.get()))
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     fun atualizarPessoaCompleta(@RequestBody pessoa:Pessoa, @PathVariable("id") id: Long): ResponseEntity<Pessoa>{
         val pessoaAtualizando = pessoaRepository.findById(id)
         if(pessoaAtualizando.isEmpty) return ResponseEntity.notFound().build()
