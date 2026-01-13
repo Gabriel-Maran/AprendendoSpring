@@ -1,0 +1,10 @@
+br\com\gabrielmaran\pessoa\exception\handler\CustomEntityResponseHandler.class
+br\com\gabrielmaran\pessoa\exception\ResourceNotFoundException.class
+br\com\gabrielmaran\pessoa\repository\PersonRepository.class
+br\com\gabrielmaran\pessoa\data\dto\PersonDTO.class
+br\com\gabrielmaran\pessoa\model\Person.class
+br\com\gabrielmaran\pessoa\service\PersonService.class
+br\com\gabrielmaran\pessoa\mapper\ObjectMapper.class
+br\com\gabrielmaran\pessoa\Startup.class
+br\com\gabrielmaran\pessoa\exception\ExceptionResponse.class
+br\com\gabrielmaran\pessoa\controllers\PersonController.class
