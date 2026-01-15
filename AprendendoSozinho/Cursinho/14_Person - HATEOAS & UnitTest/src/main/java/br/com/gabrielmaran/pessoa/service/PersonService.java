@@ -2,6 +2,7 @@ package br.com.gabrielmaran.pessoa.service;
 
 import br.com.gabrielmaran.pessoa.data.dto.PersonDTO;
 import br.com.gabrielmaran.pessoa.controllers.PersonController;
+import br.com.gabrielmaran.pessoa.exception.RequiredObjectIsNullException;
 import br.com.gabrielmaran.pessoa.exception.ResourceNotFoundException;
 import static br.com.gabrielmaran.pessoa.mapper.ObjectMapper.parseListObjects ;
 import static br.com.gabrielmaran.pessoa.mapper.ObjectMapper.parseObject ;
@@ -41,12 +42,14 @@ public class PersonService {
 
     public PersonDTO createPerson(PersonDTO pessoa) {
         logger.info("Creating one person");
+        if(pessoa == null) throw new RequiredObjectIsNullException();
         var entity = parseObject(pessoa, Person.class);
         return addHateoasLinks(parseObject(repository.save(entity), PersonDTO.class));
     }
 
     public PersonDTO updatePerson(PersonDTO pessoa) {
         logger.info("Updating one person");
+        if(pessoa == null) throw new RequiredObjectIsNullException();
         Person entity = repository.findById(pessoa.getId()).
                 orElseThrow(() -> new ResourceNotFoundException("No records find for " + pessoa.getId() + " id"));
         entity.setFirstName(pessoa.getFirstName());
@@ -59,6 +62,8 @@ public class PersonService {
 
     public void deletePerson(Long id) {
         logger.info("Deleting one person");
+        repository.findById(id).
+                orElseThrow(() -> new ResourceNotFoundException("No records find for " + id + " id"));
         repository.deleteById(id);
     }
 
