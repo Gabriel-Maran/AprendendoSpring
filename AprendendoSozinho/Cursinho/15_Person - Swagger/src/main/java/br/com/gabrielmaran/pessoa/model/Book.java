@@ -7,14 +7,22 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table()
+@Table(name = "books")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "author")
     private String author;
+
+    @Column(name = "launch_date")
     private Date launch_date;
+
+    @Column(name = "price")
     private BigDecimal price;
+
+    @Column(name = "title")
     private String title;
 
     public Book(){
