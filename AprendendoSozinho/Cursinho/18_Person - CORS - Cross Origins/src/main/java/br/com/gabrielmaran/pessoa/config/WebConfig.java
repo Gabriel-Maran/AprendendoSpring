@@ -13,6 +13,18 @@ public class WebConfig implements WebMvcConfigurer {
         // Ele é feito nessa classe com a anotation Configuration, pois essa notação faz com que a classe carregue no começo
         // Assim, faz com que já tome a configuração e instancie oq é necessario
         // @Bean é usada em classes de configuração
+    @Value("${cors.originPatterns:http://localhost:8080}")
+    private String corsOriginPatterns = "";
+
+    //Abilita os CORS para a aplicação de forma global, podemos habilitar por metodo, controller ou assim, de maneira global
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        var allowedOriginis = corsOriginPatterns.split(",");
+        registry.addMapping("/**")
+                .allowedOrigins(allowedOriginis)
+                .allowedMethods("*") // allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowCredentials(true);
+    }
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
