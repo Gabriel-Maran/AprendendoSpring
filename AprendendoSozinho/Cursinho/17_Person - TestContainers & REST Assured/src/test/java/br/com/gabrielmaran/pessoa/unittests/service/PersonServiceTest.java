@@ -1,10 +1,11 @@
-package br.com.gabrielmaran.pessoa.service;
+package br.com.gabrielmaran.pessoa.unittests.service;
 
 import br.com.gabrielmaran.pessoa.data.dto.PersonDTO;
 import br.com.gabrielmaran.pessoa.exception.RequiredObjectIsNullException;
 import br.com.gabrielmaran.pessoa.model.Person;
 import br.com.gabrielmaran.pessoa.repository.PersonRepository;
-import br.com.gabrielmaran.pessoa.unitetests.mapper.mocks.MockPerson;
+import br.com.gabrielmaran.pessoa.service.PersonService;
+import br.com.gabrielmaran.pessoa.unittests.mapper.mocks.MockPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

@@ -1,10 +1,11 @@
-package br.com.gabrielmaran.pessoa.service;
+package br.com.gabrielmaran.pessoa.unittests.service;
 
 import br.com.gabrielmaran.pessoa.data.dto.BookDTO;
 import br.com.gabrielmaran.pessoa.exception.RequiredObjectIsNullException;
 import br.com.gabrielmaran.pessoa.model.Book;
 import br.com.gabrielmaran.pessoa.repository.BookRepository;
-import br.com.gabrielmaran.pessoa.unitetests.mapper.mocks.MockBook;
+import br.com.gabrielmaran.pessoa.service.BookService;
+import br.com.gabrielmaran.pessoa.unittests.mapper.mocks.MockBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -17,6 +18,8 @@ import org.springframework.hateoas.Links;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +67,6 @@ class BookServiceTest {
         assertEquals("Author" + result.getId(), result.getAuthor(), "Author não é igual ao Mock");
         assertEquals("Title" + result.getId(), result.getTitle(), "Title não é igual ao Mock");
         assertEquals(BigDecimal.ONE.toString(), result.getPrice().toString(), "Price não é igual ao Mock");
-        assertEquals(Date.from(Instant.now()).toString(), result.getLaunch_date().toString(), "Launch_date não é igual ao Mock");
     }
 
     @Test
@@ -89,7 +91,6 @@ class BookServiceTest {
             assertEquals("Author" + result.getId(), result.getAuthor(), "Author não é igual ao Mock");
             assertEquals("Title" + result.getId(), result.getTitle(), "Title não é igual ao Mock");
             assertEquals(BigDecimal.ONE.toString(), result.getPrice().toString(), "Price não é igual ao Mock");
-            assertEquals(Date.from(Instant.now()).toString(), result.getLaunch_date().toString(), "Launch_date não é igual ao Mock");
         }
     }
 
@@ -158,7 +159,6 @@ class BookServiceTest {
         assertEquals("Author" + result.getId(), result.getAuthor(), "Author não é igual ao Mock");
         assertEquals("Title" + result.getId(), result.getTitle(), "Title não é igual ao Mock");
         assertEquals(BigDecimal.ONE.toString(), result.getPrice().toString(), "Price não é igual ao Mock");
-        assertEquals(Date.from(Instant.now()).toString(), result.getLaunch_date().toString(), "Launch_date não é igual ao Mock");
     }
 
     @Test

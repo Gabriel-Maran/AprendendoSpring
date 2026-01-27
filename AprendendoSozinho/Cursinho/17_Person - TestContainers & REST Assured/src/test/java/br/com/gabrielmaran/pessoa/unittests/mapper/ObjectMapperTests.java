@@ -1,4 +1,4 @@
-package br.com.gabrielmaran.pessoa.unitetests.mapper;
+package br.com.gabrielmaran.pessoa.unittests.mapper;
 
 import static br.com.gabrielmaran.pessoa.mapper.ObjectMapper.parseListObjects;
 import static br.com.gabrielmaran.pessoa.mapper.ObjectMapper.parseObject;
@@ -8,7 +8,7 @@ import java.util.List;
 
 import br.com.gabrielmaran.pessoa.data.dto.PersonDTO;
 import br.com.gabrielmaran.pessoa.model.Person;
-import br.com.gabrielmaran.pessoa.unitetests.mapper.mocks.MockPerson;
+import br.com.gabrielmaran.pessoa.unittests.mapper.mocks.MockPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

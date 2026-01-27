@@ -1,4 +1,4 @@
-package br.com.gabrielmaran.pessoa.unitetests.mapper.mocks;
+package br.com.gabrielmaran.pessoa.unittests.mapper.mocks;
 
 import br.com.gabrielmaran.pessoa.data.dto.BookDTO;
 import br.com.gabrielmaran.pessoa.data.dto.PersonDTO;
