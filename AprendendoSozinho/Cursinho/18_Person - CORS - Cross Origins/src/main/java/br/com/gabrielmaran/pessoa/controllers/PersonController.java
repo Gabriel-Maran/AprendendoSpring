@@ -52,7 +52,7 @@ public class PersonController implements PersonControllerDocs {
         return ResponseEntity.ok(personService.updatePerson(person));
     }
 
-    @DeleteMapping(value = "{id}")
+    @DeleteMapping(value = "/{id}")
     @Override
     public ResponseEntity<?> deletePerson(@PathVariable("id") Long id) {
         personService.deletePerson(id);

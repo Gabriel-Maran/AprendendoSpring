@@ -20,7 +20,7 @@ class SwaggerIntegrationTest extends AbstractIntegrationTest {
 				.when()
 					.get()
 				.then()
-				.statusCode(200)
+					.statusCode(200)
 				.extract()
 					.body()
 						.asString();
