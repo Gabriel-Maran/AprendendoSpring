@@ -1,4 +1,4 @@
-package br.com.gabrielmaran.pessoa.integrationtest.controllers.withjson;
+package br.com.gabrielmaran.pessoa.integrationtest.controllers.cors.withjson;
 
 import br.com.gabrielmaran.pessoa.config.TestConfigs;
 import br.com.gabrielmaran.pessoa.integrationtest.dto.PersonDTO;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerTest extends AbstractIntegrationTest {
+class PersonControllerCorsTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
@@ -29,20 +29,15 @@ class PersonControllerTest extends AbstractIntegrationTest {
     @BeforeAll
     static void setUp() {
         objectMapper = new ObjectMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); //Ignora campos a mais no JSON
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); //Ignora campos a mais no XML
         person = new PersonDTO();
     }
 
     @Test
     @Order(3)
     void findByIdWithCorrectOrigin() throws JsonProcessingException {
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_8080)
-                .setBasePath("/api/pessoa/v1") //Path do teste
-                .setPort(TestConfigs.SERVER_PORT) //Porta
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de requisição
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de resposta
-                .build();
+        setCurrentCorrectSpecification();
+
         var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .pathParam("id", person.getId())
@@ -67,18 +62,13 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertEquals("LASTNAME-TESTE", personSearched.getLastName());
         assertEquals("ADDRESS-TESTE", personSearched.getAddress());
         assertEquals("Male", personSearched.getGender());
+        assertTrue(personSearched.getEnabled());
     }
 
     @Test
     @Order(4)
     void findByIdWithWrongOrigin() throws JsonProcessingException {
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_8081)
-                .setBasePath("/api/pessoa/v1") //Path do teste
-                .setPort(TestConfigs.SERVER_PORT) //Porta
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de requisição
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de resposta
-                .build();
+        setCurrentWrongSpecification();
         var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .pathParam("id", person.getId())
@@ -98,13 +88,8 @@ class PersonControllerTest extends AbstractIntegrationTest {
     @Order(1)
     void createPersonWithCorrectOrigin() throws JsonProcessingException {
         mockPerson();
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_8080)
-                .setBasePath("/api/pessoa/v1") //Path do teste
-                .setPort(TestConfigs.SERVER_PORT) //Porta
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de requisição
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de resposta
-                .build();
+        setCurrentCorrectSpecification();
+
         var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(person)
@@ -130,19 +115,14 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertEquals("LASTNAME-TESTE", createdPerson.getLastName());
         assertEquals("ADDRESS-TESTE", createdPerson.getAddress());
         assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
     }
 
     @Test
     @Order(2)
     void createPersonWithWrongOrigin() throws JsonProcessingException {
         mockPerson();
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_8081)
-                .setBasePath("/api/pessoa/v1") //Path do teste
-                .setPort(TestConfigs.SERVER_PORT) //Porta
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de requisição
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de resposta
-                .build();
+        setCurrentWrongSpecification();
         var content = given(specification)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(person)
@@ -162,6 +142,27 @@ class PersonControllerTest extends AbstractIntegrationTest {
         person.setLastName("LASTNAME-TESTE");
         person.setAddress("ADDRESS-TESTE");
         person.setGender("Male");
+        person.setEnabled(true);
+    }
+
+    private void setCurrentCorrectSpecification(){
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_8080)
+                .setBasePath("/api/pessoa/v1") //Path do teste
+                .setPort(TestConfigs.SERVER_PORT) //Porta
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de requisição
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de resposta
+                .build();
+    }
+
+    private void setCurrentWrongSpecification(){
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_8081)
+                .setBasePath("/api/pessoa/v1") //Path do teste
+                .setPort(TestConfigs.SERVER_PORT) //Porta
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de requisição
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de resposta
+                .build();
     }
 
 

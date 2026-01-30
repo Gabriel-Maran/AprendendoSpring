@@ -1,9 +1,14 @@
 package br.com.gabrielmaran.pessoa.integrationtest.dto;
 
+import br.com.gabrielmaran.pessoa.model.Person;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import org.springframework.hateoas.RepresentationModel;
+
 import java.io.Serializable;
 import java.util.Objects;
 
-public class PersonDTO implements Serializable {
+@XmlRootElement
+public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {
 
     private static  final Long serialVersonUID = 1L;
     private Long id;
