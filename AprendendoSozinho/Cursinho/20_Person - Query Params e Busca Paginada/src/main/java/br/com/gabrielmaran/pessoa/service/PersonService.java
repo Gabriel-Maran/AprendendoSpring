@@ -14,19 +14,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class PersonService {
-    @Autowired // Por pura preguiça de fazer um contrutor
+    @Autowired
     PersonRepository repository;
 
+    @Autowired
+    PagedResourcesAssembler<PersonDTO> assembler;
+
     private final Logger logger = LoggerFactory.getLogger(PersonService.class.getName());
+
 
     public PersonDTO findById(Long id) {
         logger.info("Finding one person by id: {}", id);
@@ -35,20 +43,33 @@ public class PersonService {
         return addHateoasLinks(parseObject(entity, PersonDTO.class));
     }
 
-    public Page<PersonDTO> findAll(Pageable pageable) {
+    public PagedModel<EntityModel<PersonDTO>> findAll(Pageable pageable) {
         logger.info("Finding all people");
-        Pageable pageableVerified;
-        if (pageable.getPageSize() > 100){
-            pageableVerified = PageRequest.of(pageable.getPageNumber(), 100);
-        }else{
-            pageableVerified = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        }
+        Pageable pageableVerified =
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        Math.min(100, pageable.getPageSize()),
+                        pageable.getSort()
+                );
         var people = repository.findAll(pageableVerified);
-        return people.map(person -> {
+        var peopleDTOWithHateoas = people.map(person -> {
             var dto = parseObject(person, PersonDTO.class);
             addHateoasLinks(dto);
             return dto;
         });
+
+        Link findAllLink = WebMvcLinkBuilder
+                .linkTo(
+                        WebMvcLinkBuilder
+                                .methodOn(PersonController.class)
+                                .findAll(
+                                        pageable.getPageNumber(),
+                                        Math.min(100, pageable.getPageSize()),
+                                        "desc".contains(pageable.getSort().toString()) ? "asc" : "desc"
+                                )
+                ).withSelfRel();
+
+        return assembler.toModel(peopleDTOWithHateoas, findAllLink);
 
     }
 
@@ -90,7 +111,7 @@ public class PersonService {
 
     private PersonDTO addHateoasLinks(PersonDTO person){
         person.add(linkTo(methodOn(PersonController.class).findById(person.getId())).withSelfRel().withType("GET"));
-        person.add(linkTo(methodOn(PersonController.class).findAll(0, 12)).withRel("findPeople").withType("GET"));
+        person.add(linkTo(methodOn(PersonController.class).findAll(0, 12, "asc")).withRel("findPeople").withType("GET"));
         person.add(linkTo(methodOn(PersonController.class).createPerson(person)).withRel("create").withType("POST"));
         person.add(linkTo(methodOn(PersonController.class).updatePerson(person)).withRel("edit").withType("PUT"));
         person.add(linkTo(methodOn(PersonController.class).disablePerson(person.getId())).withRel("disable").withType("PATCH"));
