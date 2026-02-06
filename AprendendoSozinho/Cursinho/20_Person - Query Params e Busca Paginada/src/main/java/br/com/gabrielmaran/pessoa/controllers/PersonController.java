@@ -32,8 +32,24 @@ public class PersonController implements PersonControllerDocs {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE}
     )
     @Override
-    public ResponseEntity<PersonDTO> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<PersonDTO> findById(
+            @PathVariable("id") Long id
+    ) {
         return ResponseEntity.ok(personService.findById(id));
+    }
+
+    @GetMapping(value = "/findPeopleByName/{firstName}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE})
+    @Override
+    public ResponseEntity<PagedModel<EntityModel<PersonDTO>>> findPeopleByName(
+            @PathVariable("firstName") String firstName,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "12") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
+    )
+    {
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+        var people = personService.findAllByName(firstName, PageRequest.of(page, size, Sort.by(sortDirection, "firstName")));
+        return ResponseEntity.ok(people);
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE})
