@@ -135,7 +135,7 @@ public class PersonService {
     private PersonDTO addHateoasLinks(PersonDTO person){
         person.add(linkTo(methodOn(PersonController.class).findById(person.getId())).withSelfRel().withType("GET"));
         person.add(linkTo(methodOn(PersonController.class).findAll(0, 12, "asc")).withRel("findPeople").withType("GET"));
-        person.add(linkTo(methodOn(PersonController.class).findPeopleByName("Gabriel",0, 12, "asc")).withRel("findPeopleByName").withType("GET"));
+        person.add(linkTo(methodOn(PersonController.class).findPeopleByName(person.getFirstName(),0, 12, "asc")).withRel("findPeopleByName").withType("GET"));
         person.add(linkTo(methodOn(PersonController.class).createPerson(person)).withRel("create").withType("POST"));
         person.add(linkTo(methodOn(PersonController.class).updatePerson(person)).withRel("edit").withType("PUT"));
         person.add(linkTo(methodOn(PersonController.class).disablePerson(person.getId())).withRel("disable").withType("PATCH"));

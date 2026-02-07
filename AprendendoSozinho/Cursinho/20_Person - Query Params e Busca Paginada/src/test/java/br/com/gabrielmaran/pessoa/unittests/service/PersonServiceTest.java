@@ -1,5 +1,6 @@
 package br.com.gabrielmaran.pessoa.unittests.service;
 
+import br.com.gabrielmaran.pessoa.controllers.PersonController;
 import br.com.gabrielmaran.pessoa.data.dto.PersonDTO;
 import br.com.gabrielmaran.pessoa.exception.RequiredObjectIsNullException;
 import br.com.gabrielmaran.pessoa.model.Person;
@@ -21,6 +22,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) //Tudo que for testado desta vez só existirá esta vez
 @ExtendWith(MockitoExtension.class)
@@ -53,9 +56,11 @@ class PersonServiceTest {
 
         //Teste de links
         assertLink(links, "self", "/api/pessoa/v1/" + person.getId(), "GET");
-        assertLink(links, "findPeople", "/api/pessoa/v1", "GET");
+        assertLink(links, "findPeople", "/api/pessoa/v1?page=0&size=12&direction=asc", "GET");
+        assertLink(links, "findPeopleByName", "/api/pessoa/v1/findPeopleByName/"+ person.getFirstName().replaceAll(" ", "%20") +"?page=0&size=12&direction=asc", "GET");
         assertLink(links, "create", "/api/pessoa/v1", "POST");
         assertLink(links, "edit", "/api/pessoa/v1", "PUT");
+        assertLink(links, "disable", "/api/pessoa/v1/" + person.getId(), "PATCH");
         assertLink(links, "delete", "/api/pessoa/v1/" + person.getId(), "DELETE");
 
         //Teste de variaveis do Objeto
@@ -78,9 +83,11 @@ class PersonServiceTest {
 
             //Teste de links
             assertLink(links, "self", "/api/pessoa/v1/" + person.getId(), "GET");
-            assertLink(links, "findPeople", "/api/pessoa/v1", "GET");
+            assertLink(links, "findPeople", "/api/pessoa/v1?page=0&size=12&direction=asc", "GET");
+            assertLink(links, "findPeopleByName", "/api/pessoa/v1/findPeopleByName/"+ person.getFirstName().replaceAll(" ", "%20") +"?page=0&size=12&direction=asc", "GET");
             assertLink(links, "create", "/api/pessoa/v1", "POST");
             assertLink(links, "edit", "/api/pessoa/v1", "PUT");
+            assertLink(links, "disable", "/api/pessoa/v1/" + person.getId(), "PATCH");
             assertLink(links, "delete", "/api/pessoa/v1/" + person.getId(), "DELETE");
 
             //Teste de variaveis do Objeto
@@ -106,9 +113,11 @@ class PersonServiceTest {
 
         //Teste de links
         assertLink(links, "self", "/api/pessoa/v1/" + person.getId(), "GET");
-        assertLink(links, "findPeople", "/api/pessoa/v1", "GET");
+        assertLink(links, "findPeople", "/api/pessoa/v1?page=0&size=12&direction=asc", "GET");
+        assertLink(links, "findPeopleByName", "/api/pessoa/v1/findPeopleByName/"+ person.getFirstName().replaceAll(" ", "%20") +"?page=0&size=12&direction=asc", "GET");
         assertLink(links, "create", "/api/pessoa/v1", "POST");
         assertLink(links, "edit", "/api/pessoa/v1", "PUT");
+        assertLink(links, "disable", "/api/pessoa/v1/" + person.getId(), "PATCH");
         assertLink(links, "delete", "/api/pessoa/v1/" + person.getId(), "DELETE");
 
         //Teste de variaveis do Objeto
@@ -131,7 +140,7 @@ class PersonServiceTest {
     }
 
     @Test
-    void updatePerson() {
+    void  updatePerson() {
         Person person = input.mockEntity(1);
         Person persisted = person;
         PersonDTO dto = input.mockDTO(1);
@@ -147,9 +156,11 @@ class PersonServiceTest {
 
         //Teste de links
         assertLink(links, "self", "/api/pessoa/v1/" + person.getId(), "GET");
-        assertLink(links, "findPeople", "/api/pessoa/v1", "GET");
+        assertLink(links, "findPeople", "/api/pessoa/v1?page=0&size=12&direction=asc", "GET");
+        assertLink(links, "findPeopleByName", "/api/pessoa/v1/findPeopleByName/"+ person.getFirstName().replaceAll(" ", "%20") +"?page=0&size=12&direction=asc", "GET");
         assertLink(links, "create", "/api/pessoa/v1", "POST");
         assertLink(links, "edit", "/api/pessoa/v1", "PUT");
+        assertLink(links, "disable", "/api/pessoa/v1/" + person.getId(), "PATCH");
         assertLink(links, "delete", "/api/pessoa/v1/" + person.getId(), "DELETE");
 
         //Teste de variaveis do Objeto

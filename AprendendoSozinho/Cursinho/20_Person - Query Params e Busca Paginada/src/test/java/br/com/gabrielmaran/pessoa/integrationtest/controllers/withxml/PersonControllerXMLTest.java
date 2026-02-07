@@ -2,11 +2,10 @@ package br.com.gabrielmaran.pessoa.integrationtest.controllers.withxml;
 
 import br.com.gabrielmaran.pessoa.config.TestConfigs;
 import br.com.gabrielmaran.pessoa.integrationtest.dto.PersonDTO;
+import br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.xml.PagedModelPersonXML;
 import br.com.gabrielmaran.pessoa.integrationtest.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -177,6 +176,7 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
         setCurrentSpecification();
         var content = given(specification)
                 .accept(MediaType.APPLICATION_XML_VALUE)
+                .queryParam("page", 3, "size", 12, "directio", "asc")
                 .when()
                     .get()
                 .then()
@@ -185,14 +185,16 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
                 .extract()
                     .body()
                         .asString();
-        List<PersonDTO> peopleSeearched = objectMapper.readValue(content, new TypeReference<List<PersonDTO>>(){});
+        PagedModelPersonXML wrapper = objectMapper.readValue(content, PagedModelPersonXML.class);
+        List<PersonDTO> peopleSeearched = wrapper.getContent();
         person = peopleSeearched.getFirst();
+
         assertNotNull(person.getId());
         assertTrue(person.getId() > 0);
 
-        assertEquals("Pessoa 0", person.getFirstName());
-        assertEquals("Sobrenome 0", person.getLastName());
-        assertEquals("Lugar 0", person.getAddress());
+        assertEquals("Ambros", person.getFirstName());
+        assertEquals("Levitt", person.getLastName());
+        assertEquals("3 Bunker Hill Trail", person.getAddress());
         assertEquals("Male", person.getGender());
         assertTrue(person.getEnabled());
     }

@@ -92,7 +92,7 @@ public class BookService {
 
     private BookDTO addHateoasLinks(BookDTO book){
        book.add(linkTo(methodOn(BookController.class).findById(book.getId())).withSelfRel().withType("GET"));
-   book.add(linkTo(methodOn(BookController.class).findAll(0, 12, "asc")).withRel("findPeople").withType("GET"));
+       book.add(linkTo(methodOn(BookController.class).findAll(0, 12, "asc")).withRel("findPeople").withType("GET"));
        book.add(linkTo(methodOn(BookController.class).createBook(book)).withRel("create").withType("POST"));
        book.add(linkTo(methodOn(BookController.class).updateBook(book)).withRel("edit").withType("PUT"));
        book.add(linkTo(methodOn(BookController.class).deleteBook(book.getId())).withRel("delete").withType("DELETE"));

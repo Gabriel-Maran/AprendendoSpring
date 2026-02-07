@@ -3,10 +3,10 @@ package br.com.gabrielmaran.pessoa.integrationtest.controllers.withyaml;
 import br.com.gabrielmaran.pessoa.config.TestConfigs;
 import br.com.gabrielmaran.pessoa.integrationtest.controllers.withyaml.mapper.YAMLMapper;
 import br.com.gabrielmaran.pessoa.integrationtest.dto.PersonDTO;
+import br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.json.WrapperPersonDTO;
+import br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.yaml.PagedModelPersonYAML;
 import br.com.gabrielmaran.pessoa.integrationtest.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
 import io.restassured.config.RestAssuredConfig;
@@ -17,11 +17,8 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.http.MediaType;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -195,6 +192,7 @@ class PersonControllerYAMLTest extends AbstractIntegrationTest {
         setCurrentSpecification();
         var content = given(specification)
                 .accept(MediaType.APPLICATION_YAML_VALUE)
+                .queryParam("page", 3, "size", 12, "directio", "asc")
                 .when()
                     .get()
                 .then()
@@ -202,16 +200,16 @@ class PersonControllerYAMLTest extends AbstractIntegrationTest {
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
-                        .as(PersonDTO[].class, objectMapper);
+                        .as(PagedModelPersonYAML.class, objectMapper);
 
-        List<PersonDTO> peopleSeearched = Arrays.asList(content);
+        List<PersonDTO> peopleSeearched = content.getContent();
         person = peopleSeearched.getFirst();
         assertNotNull(person.getId());
         assertTrue(person.getId() > 0);
 
-        assertEquals("Pessoa 0", person.getFirstName());
-        assertEquals("Sobrenome 0", person.getLastName());
-        assertEquals("Lugar 0", person.getAddress());
+        assertEquals("Ambros", person.getFirstName());
+        assertEquals("Levitt", person.getLastName());
+        assertEquals("3 Bunker Hill Trail", person.getAddress());
         assertEquals("Male", person.getGender());
         assertTrue(person.getEnabled());
     }
@@ -235,6 +233,4 @@ class PersonControllerYAMLTest extends AbstractIntegrationTest {
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de resposta
                 .build();
     }
-
-
 }

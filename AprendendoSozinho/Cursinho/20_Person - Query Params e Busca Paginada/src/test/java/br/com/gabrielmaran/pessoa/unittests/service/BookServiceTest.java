@@ -58,7 +58,7 @@ class BookServiceTest {
 
         //Teste de links
         assertLink(links, "self", "/api/book/v1/" + book.getId(), "GET");
-        assertLink(links, "findPeople", "/api/book/v1", "GET");
+        assertLink(links, "findPeople", "/api/book/v1?page=0&size=12&direction=asc", "GET");
         assertLink(links, "create", "/api/book/v1", "POST");
         assertLink(links, "edit", "/api/book/v1", "PUT");
         assertLink(links, "delete", "/api/book/v1/" + book.getId(), "DELETE");
@@ -82,7 +82,7 @@ class BookServiceTest {
 
             //Teste de links
             assertLink(links, "self", "/api/book/v1/" + book.getId(), "GET");
-            assertLink(links, "findPeople", "/api/book/v1", "GET");
+            assertLink(links, "findPeople", "/api/book/v1?page=0&size=12&direction=asc", "GET");
             assertLink(links, "create", "/api/book/v1", "POST");
             assertLink(links, "edit", "/api/book/v1", "PUT");
             assertLink(links, "delete", "/api/book/v1/" + book.getId(), "DELETE");
@@ -109,7 +109,7 @@ class BookServiceTest {
 
         //Teste de links
         assertLink(links, "self", "/api/book/v1/" + book.getId(), "GET");
-        assertLink(links, "findPeople", "/api/book/v1", "GET");
+        assertLink(links, "findPeople", "/api/book/v1?page=0&size=12&direction=asc", "GET");
         assertLink(links, "create", "/api/book/v1", "POST");
         assertLink(links, "edit", "/api/book/v1", "PUT");
         assertLink(links, "delete", "/api/book/v1/" + book.getId(), "DELETE");
@@ -148,9 +148,15 @@ class BookServiceTest {
         assertNotNull(result.getLinks(), "Sem links/links nulls");
         var links = result.getLinks();
 
+        links.forEach(l -> {
+                    System.out.println(l.toString());
+                }
+        );
+        System.out.println(book.getTitle());
+
         //Teste de links
         assertLink(links, "self", "/api/book/v1/" + book.getId(), "GET");
-        assertLink(links, "findPeople", "/api/book/v1", "GET");
+        assertLink(links, "findPeople", "/api/book/v1?page=0&size=12&direction=asc", "GET");
         assertLink(links, "create", "/api/book/v1", "POST");
         assertLink(links, "edit", "/api/book/v1", "PUT");
         assertLink(links, "delete", "/api/book/v1/" + book.getId(), "DELETE");
