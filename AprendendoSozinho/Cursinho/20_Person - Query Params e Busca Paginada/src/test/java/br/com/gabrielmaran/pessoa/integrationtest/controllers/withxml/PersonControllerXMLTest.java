@@ -2,7 +2,8 @@ package br.com.gabrielmaran.pessoa.integrationtest.controllers.withxml;
 
 import br.com.gabrielmaran.pessoa.config.TestConfigs;
 import br.com.gabrielmaran.pessoa.integrationtest.dto.PersonDTO;
-import br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.xml.PagedModelPersonXML;
+import br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.json.person.WrapperPersonDTO;
+import br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.xml.person.PagedModelPersonXML;
 import br.com.gabrielmaran.pessoa.integrationtest.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -33,7 +34,7 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
     @BeforeAll
     static void setUp() {
         objectMapper = new XmlMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); //Ignora campos a mais no JSON
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); //Ignora campos a mais no XML
         objectMapper.registerModule(new Jackson2HalModule());
         person = new PersonDTO();
         mockPerson();
@@ -196,6 +197,36 @@ class PersonControllerXMLTest extends AbstractIntegrationTest {
         assertEquals("Levitt", person.getLastName());
         assertEquals("3 Bunker Hill Trail", person.getAddress());
         assertEquals("Male", person.getGender());
+        assertTrue(person.getEnabled());
+    }
+
+    @Test
+    @Order(6)
+    void findByNameTest() throws JsonProcessingException {
+        setCurrentSpecification();
+        var content = given(specification)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                .pathParam("firstName", "an")
+                .queryParam("page", 1, "size", 3, "direction", "asc")
+                .when()
+                    .get("findPeopleByName/{firstName}")
+                .then()
+                    .statusCode(200)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .extract()
+                    .body()
+                        .asString();
+        PagedModelPersonXML wrapper = objectMapper.readValue(content, PagedModelPersonXML.class);
+        List<PersonDTO> peopleSeearched = wrapper.getContent();
+        person = peopleSeearched.getFirst();
+
+        assertNotNull(person.getId());
+        assertTrue(person.getId() > 0);
+
+        assertEquals("Anet", person.getFirstName());
+        assertEquals("Stutte", person.getLastName());
+        assertEquals("38281 Florence Lane", person.getAddress());
+        assertEquals("Female", person.getGender());
         assertTrue(person.getEnabled());
     }
 

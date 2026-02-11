@@ -1,5 +1,6 @@
-package br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.yaml;
+package br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.xml.book;
 
+import br.com.gabrielmaran.pessoa.integrationtest.dto.BookDTO;
 import br.com.gabrielmaran.pessoa.integrationtest.dto.PersonDTO;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -7,19 +8,19 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement
-public class PagedModelPersonYAML {
+public class PagedModelBookXML {
     private static final Long serialVersonUID = 1L;
 
     @XmlElement(name = "content")
-    public List<PersonDTO> content;
+    public List<BookDTO> content;
 
-    public PagedModelPersonYAML() {}
+    public PagedModelBookXML() {}
 
-    public List<PersonDTO> getContent() {
+    public List<BookDTO> getContent() {
         return content;
     }
 
-    public void setContent(List<PersonDTO> content) {
+    public void setContent(List<BookDTO> content) {
         this.content = content;
     }
 }

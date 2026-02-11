@@ -1,4 +1,4 @@
-package br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.json;
+package br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.json.person;
 
 import br.com.gabrielmaran.pessoa.integrationtest.dto.PersonDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;

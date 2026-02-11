@@ -1,4 +1,4 @@
-package br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.xml;
+package br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.xml.person;
 
 import br.com.gabrielmaran.pessoa.integrationtest.dto.PersonDTO;
 import jakarta.xml.bind.annotation.XmlElement;
