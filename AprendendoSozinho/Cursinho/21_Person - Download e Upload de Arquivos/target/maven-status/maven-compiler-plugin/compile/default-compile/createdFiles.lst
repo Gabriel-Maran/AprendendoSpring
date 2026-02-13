@@ -1,0 +1,12 @@
+br\com\gabrielmaran\pessoa\controllers\docs\BookControllerDocs.class
+br\com\gabrielmaran\pessoa\controllers\docs\PersonControllerDocs.class
+br\com\gabrielmaran\pessoa\model\Book.class
+br\com\gabrielmaran\pessoa\repository\BookRepository.class
+br\com\gabrielmaran\pessoa\service\BookService.class
+br\com\gabrielmaran\pessoa\mapper\ObjectMapper.class
+br\com\gabrielmaran\pessoa\Startup.class
+br\com\gabrielmaran\pessoa\config\OpenApiConfig.class
+br\com\gabrielmaran\pessoa\controllers\BookController.class
+br\com\gabrielmaran\pessoa\config\WebConfig.class
+br\com\gabrielmaran\pessoa\controllers\PersonController.class
+br\com\gabrielmaran\pessoa\data\dto\BookDTO.class
