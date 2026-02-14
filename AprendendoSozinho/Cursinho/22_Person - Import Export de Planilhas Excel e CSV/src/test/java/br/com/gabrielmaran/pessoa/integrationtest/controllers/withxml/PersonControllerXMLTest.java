@@ -1,0 +1,254 @@
+package br.com.gabrielmaran.pessoa.integrationtest.controllers.withxml;
+
+import br.com.gabrielmaran.pessoa.config.TestConfigs;
+import br.com.gabrielmaran.pessoa.integrationtest.dto.PersonDTO;
+import br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.json.person.WrapperPersonDTO;
+import br.com.gabrielmaran.pessoa.integrationtest.dto.wrapper.xml.person.PagedModelPersonXML;
+import br.com.gabrielmaran.pessoa.integrationtest.testcontainers.AbstractIntegrationTest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.filter.log.LogDetail;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.*;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
+import org.springframework.http.MediaType;
+
+import java.util.List;
+
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class PersonControllerXMLTest extends AbstractIntegrationTest {
+
+    private static RequestSpecification specification;
+    private static XmlMapper objectMapper;
+    private static PersonDTO person;
+
+    @BeforeAll
+    static void setUp() {
+        objectMapper = new XmlMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); //Ignora campos a mais no XML
+        objectMapper.registerModule(new Jackson2HalModule());
+        person = new PersonDTO();
+        mockPerson();
+    }
+
+    @Test
+    @Order(3)
+    void findByIdTest() throws JsonProcessingException {
+        setCurrentSpecification();
+        var content = given(specification)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                .pathParam("id", person.getId())
+                .when()
+                    .get("{id}")
+                .then()
+                    .statusCode(200)
+                .extract()
+                    .body()
+                        .asString();
+        PersonDTO personSearched = objectMapper.readValue(content, PersonDTO.class);
+        person = personSearched;
+
+        assertNotNull(personSearched.getId());
+        assertTrue(personSearched.getId() > 0);
+
+        assertEquals("FIRSTNAME-TESTE-UPDATE", personSearched.getFirstName());
+        assertEquals("LASTNAME-TESTE", personSearched.getLastName());
+        assertEquals("ADDRESS-TESTE", personSearched.getAddress());
+        assertEquals("Male", personSearched.getGender());
+        assertTrue(personSearched .getEnabled());
+    }
+
+    @Test
+    @Order(1)
+    void createTest() throws JsonProcessingException {
+        setCurrentSpecification();
+        var content = given(specification)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                    .body(person)
+                .when()
+                    .post()
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                .extract()
+                    .body()
+                        .asString();
+
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
+        person = createdPerson;
+
+        assertNotNull(createdPerson.getId());
+        assertTrue(createdPerson.getId() > 0);
+
+        assertEquals("FIRSTNAME-TESTE", createdPerson.getFirstName());
+        assertEquals("LASTNAME-TESTE", createdPerson.getLastName());
+        assertEquals("ADDRESS-TESTE", createdPerson.getAddress());
+        assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson .getEnabled());
+    }
+
+    @Test
+    @Order(2)
+    void updateTest() throws JsonProcessingException {
+        person.setFirstName("FIRSTNAME-TESTE-UPDATE");
+        setCurrentSpecification();
+        var content = given(specification)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                    .body(person)
+                .when()
+                    .put()
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                .extract()
+                    .body()
+                        .asString();
+
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
+        person = createdPerson;
+
+        assertNotNull(createdPerson.getId());
+        assertTrue(createdPerson.getId() > 0);
+
+        assertEquals("FIRSTNAME-TESTE-UPDATE", createdPerson.getFirstName());
+        assertEquals("LASTNAME-TESTE", createdPerson.getLastName());
+        assertEquals("ADDRESS-TESTE", createdPerson.getAddress());
+        assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson .getEnabled());
+    }
+
+    @Test
+    @Order(4)
+    void disableTest() throws JsonProcessingException {
+        setCurrentSpecification();
+        var content = given(specification)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                    .pathParam("id", person.getId())
+                .when()
+                    .patch("{id}")
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                .extract()
+                    .body()
+                        .asString();
+
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
+        person = createdPerson;
+
+        assertNotNull(createdPerson.getId());
+        assertTrue(createdPerson.getId() > 0);
+
+        assertEquals("FIRSTNAME-TESTE-UPDATE", createdPerson.getFirstName());
+        assertEquals("LASTNAME-TESTE", createdPerson.getLastName());
+        assertEquals("ADDRESS-TESTE", createdPerson.getAddress());
+        assertEquals("Male", createdPerson.getGender());
+        assertFalse(createdPerson.getEnabled());
+    }
+
+    @Test
+    @Order(5)
+    void deleteTest() throws JsonProcessingException {
+        setCurrentSpecification();
+        given(specification)
+                .pathParam("id", person.getId())
+                .when()
+                    .delete("{id}")
+                .then()
+                    .statusCode(204);
+    }
+
+    @Test
+    @Order(6)
+    void findAllTest() throws JsonProcessingException {
+        setCurrentSpecification();
+        var content = given(specification)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                .queryParam("page", 3, "size", 12, "directio", "asc")
+                .when()
+                    .get()
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                .extract()
+                    .body()
+                        .asString();
+        PagedModelPersonXML wrapper = objectMapper.readValue(content, PagedModelPersonXML.class);
+        List<PersonDTO> peopleSeearched = wrapper.getContent();
+        person = peopleSeearched.getFirst();
+
+        assertNotNull(person.getId());
+        assertTrue(person.getId() > 0);
+
+        assertEquals("Ambros", person.getFirstName());
+        assertEquals("Levitt", person.getLastName());
+        assertEquals("3 Bunker Hill Trail", person.getAddress());
+        assertEquals("Male", person.getGender());
+        assertTrue(person.getEnabled());
+    }
+
+    @Test
+    @Order(6)
+    void findByNameTest() throws JsonProcessingException {
+        setCurrentSpecification();
+        var content = given(specification)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                .pathParam("firstName", "an")
+                .queryParam("page", 1, "size", 3, "direction", "asc")
+                .when()
+                    .get("findPeopleByName/{firstName}")
+                .then()
+                    .statusCode(200)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .extract()
+                    .body()
+                        .asString();
+        PagedModelPersonXML wrapper = objectMapper.readValue(content, PagedModelPersonXML.class);
+        List<PersonDTO> peopleSeearched = wrapper.getContent();
+        person = peopleSeearched.getFirst();
+
+        assertNotNull(person.getId());
+        assertTrue(person.getId() > 0);
+
+        assertEquals("Anet", person.getFirstName());
+        assertEquals("Stutte", person.getLastName());
+        assertEquals("38281 Florence Lane", person.getAddress());
+        assertEquals("Female", person.getGender());
+        assertTrue(person.getEnabled());
+    }
+
+
+
+    private static void mockPerson(){
+        person.setFirstName("FIRSTNAME-TESTE");
+        person.setLastName("LASTNAME-TESTE");
+        person.setAddress("ADDRESS-TESTE");
+        person.setGender("Male");
+        person.setEnabled(true);
+    }
+
+    private void setCurrentSpecification(){
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_8080)
+                .setBasePath("/api/pessoa/v1") //Path do teste
+                .setPort(TestConfigs.SERVER_PORT) //Porta
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de requisição
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL)) //Nivel de detalhe do log de resposta
+                .build();
+    }
+
+
+}
