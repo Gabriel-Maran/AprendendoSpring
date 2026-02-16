@@ -1,0 +1,47 @@
+cors:
+  originPatterns: http://localhost:8080,http://localhost:3000
+file:
+  upload-dir: C:\Users\Gabriel\Desktop\AprendendoSpring\AprendendoSozinho\Cursinho\21_UploadDir
+email:
+  subject: "Default Subject"
+  message: "Default Message"
+spring:
+  application:
+    name: aprendendoSpring
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/aprendendospring_atividadepessoa?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        #dialect: org.hibernate.dialect.MySQLDialect #caso for sobre escrever, use, mas se for manter assim, deixe sem
+    show-sql: false
+    open-in-view: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enabled: true
+      mail.smtp.starttls.required: true
+
+  #Config de Upload e download
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+logging:
+  level:
+    br.com.gabrielmaran: DEBUG
+springdoc:
+  paths-to-match: /api/**/v1/**
+  swagger-ui:
+    use-root-path: true

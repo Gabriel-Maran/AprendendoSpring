@@ -1,38 +1,24 @@
-package br.com.gabrielmaran.pessoa.model;
+package br.com.gabrielmaran.pessoa.data.dto;
 
-
-import jakarta.persistence.*;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 
-@Entity
-@Table(name = "person")
-public class Person implements Serializable {
+@Relation(collectionRelation = "people")
+public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {
 
     private static  final Long serialVersonUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "first_name", nullable = false, length = 80)
     private String firstName;
-
-    @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
-
-    @Column(nullable = false, length = 100)
     private String address;
-
-    @Column(nullable = false, length = 6)
     private String gender;
+    private Boolean enabled;
 
-    @Column(nullable = false)
-    private boolean enabled;
 
-    public Person() {
+    public PersonDTO() {
     }
 
     public Long getId() {
@@ -75,24 +61,24 @@ public class Person implements Serializable {
         this.gender = gender;
     }
 
-    public boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
     @Override
     public boolean equals(Object object) {
-
         if (object == null || getClass() != object.getClass()) return false;
-        Person person = (Person) object;
-        return isEnabled() == person.isEnabled() && Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender());
+        if (!super.equals(object)) return false;
+        PersonDTO personDTO = (PersonDTO) object;
+        return Objects.equals(getId(), personDTO.getId()) && Objects.equals(getFirstName(), personDTO.getFirstName()) && Objects.equals(getLastName(), personDTO.getLastName()) && Objects.equals(getAddress(), personDTO.getAddress()) && Objects.equals(getGender(), personDTO.getGender()) && Objects.equals(getEnabled(), personDTO.getEnabled());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender(), isEnabled());
+        return Objects.hash(super.hashCode(), getId(), getFirstName(), getLastName(), getAddress(), getGender(), getEnabled());
     }
 }
